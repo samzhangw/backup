@@ -1,558 +1,179 @@
-<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="桃聯區會考落點分析，幫助使用者分析會考成績，提供學校落點參考。">
-    <meta name="keywords" content="桃聯區, 會考, 落點分析, 教育, 學校">
-    <meta name="author" content="桃聯區教育局">
-    <title>桃聯區會考落點分析</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
-            overflow: hidden;
-        }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
-            max-height: 90%;
-            width: 600px;
-            text-align: center;
-            overflow-y: auto;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        h1 {
-            color: #007BFF;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            color: #555;
-            font-size: 14px;
-            text-align: left;
-        }
-        select, button, input[type="text"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin: 5px 0 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        select:focus, button:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #007BFF;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-        button {
-            background-color: #007BFF;
-            color: #fff;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        h2 {
-            color: #333;
-            margin-top: 20px;
-            font-size: 20px;
-        }
-        p {
-            color: #555;
-            font-size: 16px;
-            text-align: left;
-            margin-bottom: 5px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: slideIn 0.5s ease-in-out;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            cursor: pointer;
-        }
-        .close:hover, .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .icon {
-            margin-right: 5px;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4361ee">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="114年分科測驗倒數計時器，幫助考生掌握備考時間">
+    <title>114年分科測驗倒數計時</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-    <!-- 免責說明模態框 -->
-     <!-- 免責說明模態框 -->
-     <div id="disclaimerModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2><i class="fas fa-exclamation-circle icon"></i>免責說明</h2>
-            <p>這是一個用於桃聯區會考落點分析的網頁系統。使用者需明白，系統提供的信息僅供參考，不應作為最終決策的唯一依據。</p>
-            <p>點擊「同意」表示您已經閱讀並同意上述免責聲明。</p>
-            <button onclick="agree()"><i class="fas fa-check icon"></i>同意</button>
-        </div>
+    <div class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
+
+    <nav class="top-navigation animate__animated animate__fadeInDown" id="mainNavigation">
+        <div class="nav-container">
+            <div class="logo">
+                <span>🎓</span>
+                <h2>114年分科測驗</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#countdown">倒數計時</a></li>
+                <li><a href="#schedule">考試日程</a></li>
+                <li><a href="#motivation">勉勵語錄</a></li>
+                
+                <!-- Theme toggle moved to navigation menu -->
+                <li class="theme-toggle-menu-item">
+                    <a href="#" id="mobileThemeToggle">
+                        <i class="fas fa-moon"></i>
+                        切換主題
+                    </a>
+                </li>
+                
+                <!-- Existing feature menu items -->
+                <li class="feature-menu-item">
+                    <a href="#" id="mobileStudyTimerBtn">
+                        <i class="fas fa-clock"></i>
+                        學習計時器
+                    </a>
+                </li>
+                <li class="feature-menu-item">
+                    <a href="#" id="mobileExamTipsBtn">
+                        <i class="fas fa-lightbulb"></i>
+                        考試小撇步
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
-        <h1><i class="fas fa-chart-line icon"></i>桃聯區會考落點分析系統</h1>
-            <form id="scoreForm" method="post">
-                <a href="https://forms.gle/ZKW3W58gcbQW3vdX9" target="_blank"><i class="fas fa-link icon"></i>如需獲取邀請碼請幫我們填寫表單</a>
-                <label for="invitationCode"><i class="fas fa-key icon"></i>輸入邀請碼:</label>
-                <input type="text" id="invitationCode" name="invitationCode" required>
-            <label for="schoolOwnership"><i class="fas fa-school icon"></i>選擇學校屬性:</label>
-        <select id="schoolOwnership">
-    <option value="all">全部</option>
-    <option value="public">公立</option>
-    <option value="private">私立</option>
-</select>
-
-<label for="schoolType"><i class="fas fa-graduation-cap icon"></i>選擇分析學校類型:</label>
-<select id="schoolType" onchange="updateMajorOptions()">
-                <option value="all">全部</option>
-                <option value="普通科">普通科</option>
-                <option value="職業類科">職業類科</option>
-            </select>
-          <label id="majorLabel" for="major" style="display:none;"><i class="fas fa-book icon"></i>選擇科系:</label>
-            <select id="major" style="display:none;">
-                <!-- 動態生成的選項 -->
-            <label for="schoolOwnership">選擇學校屬性:</label>
-
-
-            </select>
-            <label for="chinese"><i class="fas fa-language icon"></i>國文:</label>
-            <select id="chinese">
-                <option value="A++">A++</option>
-                <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="B++">B++</option>
-                <option value="B+">B+</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select>
-            <label for="english"><i class="fas fa-language icon"></i>英文:</label>
-            <select id="english">
-                <option value="A++">A++</option>
-                <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="B++">B++</option>
-                <option value="B+">B+</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select><br>
-            <label for="math"><i class="fas fa-calculator icon"></i>數學:</label>
-            <select id="math">
-                <option value="A++">A++</option>
-                <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="B++">B++</option>
-                <option value="B+">B+</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select><br>
-            <label for="science"><i class="fas fa-flask icon"></i>自然:</label>
-            <select id="science">
-                <option value="A++">A++</option>
-                <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="B++">B++</option>
-                <option value="B+">B+</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select><br>
-            <label for="social"><i class="fas fa-globe icon"></i>社會:</label>
-            <select id="social">
-                <option value="A++">A++</option>
-                <option value="A+">A+</option>
-                <option value="A">A</option>
-                <option value="B++">B++</option>
-                <option value="B+">B+</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select><br>
-            <label for="composition"><i class="fas fa-pencil-alt icon"></i>作文:</label>
-            <select id="composition">
-                <option value="0">0 級</option>
-                <option value="1">1 級</option>
-                <option value="2">2 級</option>
-                <option value="3">3 級</option>
-                <option value="4">4 級</option>
-                <option value="5">5 級</option>
-                <option value="6">6 級</option>
-            </select><br><br>
-             <button type="button" onclick="analyzeScores()"><i class="fas fa-search icon"></i>分析</button>
-
-        </form>
-                <script>
-            // JavaScript部分，控制模態框和同意按鈕
-            var modal = document.getElementById('disclaimerModal');
-            var mainContent = document.getElementById('mainContent');
-    
-            // 當頁面完全加載後顯示模態框
-            window.onload = function() {
-                modal.style.display = "block";
-            }
-    
-            // 點擊同意按鈕
-            function agree() {
-                modal.style.display = "none"; // 隱藏模態框
-                mainContent.style.display = "block"; // 顯示主內容
-            }
-    
-            // 點擊模態框外部（不同意）
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                    // 可以選擇隱藏或其他操作，這裡選擇不進入主內容
-                }
-            }
-    
-            // 關閉模態框
-            function closeModal() {
-                modal.style.display = "none";
-                // 可以選擇隱藏或其他操作，這裡選擇不進入主內容
-            }
-        </script>
-        <h2>結果</h2>
-        <p id="totalPoints"></p>
-        <p id="totalCredits"></p>
-        <p id="eligibleSchools"></p>
-            <footer>
-            <p style="text-align: center; font-size: 12px; color: #999;">&copy; 2024 桃聯區會考落點分析系統2.0. All rights reserved.</p>
-            <p style="text-align: center; font-size: 12px; color: #999;">本網站僅供學術研究使用，不應用於任何商業用途。</p>
-                            <button type="button" onclick="openInstructions()">使用說明</button>
-
-    </footer>
-<!-- 彈出視窗 -->
-<div id="instructionModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-<h1>桃聯區會考落點分析系統 - 使用說明</h1>
-        <p>歡迎使用桃聯區會考落點分析系統3.0。本系統可根據您輸入的資料，分析您的會考成績是否符合各學校的錄取條件。</p>
-        <h2>步驟：</h2>
-        <ol>
-            <p>1.在上方輸入邀請碼。<p>
-            <p>2.選擇您希望分析的學校類型。<p>
-            <p>3.選擇適用的科系（僅適用於職業類科）。<p>
-            <p>4.選擇國文、英文、數學、自然、社會和作文的成績。<p>
-            <p>5.點擊「分析」按鈕進行分析。<p>
-        </ol>
-        <h2>注意事項：</h2>
-        <ul>
-            <p> · 請確保輸入正確的邀請碼，否則無法進行分析。<p>
-        <a href="https://forms.gle/ZKW3W58gcbQW3vdX9" target="_blank">· 如需獲取邀請碼請幫我們填寫表單</a>
-            <p> · 系統將會根據學校的錄取標準計算總積分和總積點，並顯示可能錄取的學校。<p>
-        <p>
-        <p> · 如有任何疑問或技術問題，請聯繫我們的技術支援團隊。</p>
+        <header class="animate__animated animate__fadeInDown">
+            <h1>114年分科測驗倒數</h1>
+            <p class="subtitle">2025/7/11(五) – 2025/7/12(六)</p>
+        </header>
+        
+        <div class="countdown-container" id="countdown">
+            <div class="countdown-item">
+                <span id="days" class="countdown-value">--</span>
+                <span class="countdown-label">天</span>
+            </div>
+            <div class="countdown-item">
+                <span id="hours" class="countdown-value">--</span>
+                <span class="countdown-label">時</span>
+            </div>
+            <div class="countdown-item">
+                <span id="minutes" class="countdown-value">--</span>
+                <span class="countdown-label">分</span>
+            </div>
+            <div class="countdown-item">
+                <span id="seconds" class="countdown-value">--</span>
+                <span class="countdown-label">秒</span>
+            </div>
+        </div>
+        
+        <div class="message-container">
+            <p id="message">距離114年分科測驗還有...</p>
+        </div>
+        
+        <div class="exam-schedule animate__animated animate__fadeIn" id="schedule">
+            <h2>考試日程</h2>
+            <div class="schedule-container">
+                <div class="day-schedule">
+                    <h3>7月11日 (五)</h3>
+                    <ul>
+                        <li><span class="subject physics">物理</span></li>
+                        <li><span class="subject chemistry">化學</span></li>
+                        <li><span class="subject math">數學甲</span></li>
+                        <li><span class="subject biology">生物</span></li>
+                    </ul>
+                </div>
+                <div class="day-schedule">
+                    <h3>7月12日 (六)</h3>
+                    <ul>
+                        <li><span class="subject history">歷史</span></li>
+                        <li><span class="subject geography">地理</span></li>
+                        <li><span class="subject civics">公民與社會</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="motivation-quote animate__animated animate__fadeIn" id="motivation">
+            <blockquote id="quoteText">
+                "成功不是偶然，而是日積月累的堅持與努力。"
+            </blockquote>
+            <div class="quote-buttons">
+                <button id="prevQuote" class="quote-btn"><i class="fas fa-chevron-left"></i></button>
+                <button id="nextQuote" class="quote-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="quote-pagination" id="quotePagination">
+                <!-- 分頁指示點將由 JavaScript 動態生成 -->
+            </div>
+        </div>
+        
         <footer>
-            <p style="text-align: center; font-size: 12px; color: #999;">&copy; 2024 桃聯區會考落點分析系統3.0. All rights reserved.</p>
-                <script>
-
-document.body.onkeydown = function(e){
-var keyCode = e.keyCode || e.which || e.charCode;
-var ctrlKey = e.ctrlKey || e.metaKey;
-if(ctrlKey && (keyCode == 83 || keyCode == 85 || keyCode == 73)) {
-e.preventDefault();
-return false;
-}else if(keyCode && keyCode == 123){
-return false;
-}
-}
-
-</script>
-    <script>
-
-document.oncontextmenu = function (){
-return false;
-}
-</script>
-            <noscript><p style="font-size:70px;">對不起，你的瀏覽器不支持或禁用了JavaScript，無法正常使用此網站</p></noscript>
-
-
+            <p>加油！祝福所有考生金榜題名！</p>
+            <p class="copyright">&copy; <span id="copyrightYear"></span> 114年分科測驗倒數計時</p>
         </footer>
     </div>
-        <script>
-        const schoolRequirements = {
-                '武陵高中(普通科)': { points: 33, credits: 32, type: '普通科', ownership: 'public' },
-                 '中壢高中(普通科)': { points: 31, credits: 28, type: '普通科', ownership: 'public' },
-                '內壢高中(普通科)': { points: 29, credits: 24, type: '普通科' },
-                '陽明高中(普通科)': { points: 27, credits: 22, type: '普通科', ownership: 'public' },
-                '平鎮高中(普通科)': { points: 27, credits: 21, type: '普通科' , ownership: 'public'},
-                '永豐高中(普通科)': { points: 25, credits: 20, type: '普通科' , ownership: 'public'},
-                '大園高中(普通科)': { points: 25, credits: 19, type: '普通科' , ownership: 'public'},
-                '南崁高中(普通科)': { points: 25, credits: 16, type: '普通科' , ownership: 'public'},
-                '壽山高中(普通科)': { points: 25, credits: 14, type: '普通科' , ownership: 'public'},
-                '龍潭高中(普通科)': { points: 23, credits: 17, type: '普通科' , ownership: 'public'},
-                '楊梅高中(普通科)': { points: 23, credits: 15, type: '普通科' , ownership: 'public'},
-                '觀音高中(普通科)': { points: 23, credits: 11, type: '普通科' , ownership: 'public'},
-                '大溪高中(普通科)': { points: 23, credits: 10, type: '普通科' , ownership: 'public'},
-                '中壢高商(綜合科)': { points: 25, credits: 18, type: '普通科' , ownership: 'public'},
-                '中壢高商(商業經營科)': { points: 23, credits: 15, type: '職業類科' , ownership: 'public'},
-                '中壢高商(資料處理科)': { points: 23, credits: 15, type: '職業類科' , ownership: 'public'},
-                '中壢高商(國際貿易科)': { points: 23, credits: 14, type: '職業類科', ownership: 'public' },
-                '壽山高中(國際貿易)': { points: 23, credits: 15, type: '職業類科', ownership: 'public' },
-                '壽山高中(應用英語科)': { points: 23, credits: 15, type: '職業類科', ownership: 'public' },
-                '壽山高中(廣告設計科)': { points: 23, credits: 14, type: '職業類科', ownership: 'public' },
-                '中壢家商(應用英語科)': { points: 23, credits: 16, type: '職業類科' , ownership: 'public'},
-                '中壢家商(資料處理科)': { points: 23, credits: 13, type: '職業類科' , ownership: 'public'},
-                '中壢家商(商業經營科)': { points: 23, credits: 13, type: '職業類科', ownership: 'public' },
-                '中壢家商(家政科)': { points: 23, credits: 13, type: '職業類科' , ownership: 'public'},
-                '北科附工(電機科)': { points: 25, credits: 16, type: '職業類科' , ownership: 'public'},
-                '北科附工(電子科)': { points: 25, credits: 18, type: '職業類科' , ownership: 'public'},
-                '北科附工(畜產保健)': { points: 25, credits: 16, type: '職業類科' , ownership: 'public'},
-                '北科附工(機械科)': { points: 23, credits: 16, type: '職業類科' , ownership: 'public'},
-                '北科附工(化工科)': { points: 23, credits: 16, type: '職業類科' , ownership: 'public'},
-                '北科附工(動力機械)': { points: 23, credits: 14, type: '職業類科' , ownership: 'public'},
-                '北科附工(汽車科)': { points: 23, credits: 12, type: '職業類科' , ownership: 'public'},
-                '北科附工(生物產業機電)': { points: 23, credits: 13, type: '職業類科', ownership: 'public' },
-                '北科附工(模具科)': { points: 23, credits: 13, type: '職業類科' , ownership: 'public'},
-                '北科附工(農場經營科)': { points: 23, credits: 12, type: '職業類科' , ownership: 'public'},
-                '北科附工(園藝科)': { points: 23, credits: 12, type: '職業類科' , ownership: 'public'},
-                '楊梅高中(電子科)': { points: 23, credits: 10, type: '職業類科' , ownership: 'public'},
-                '楊梅高中(資訊科)': { points: 23, credits: 10, type: '職業類科', ownership: 'public' },
-                '龍潭高中(造園科)': { points: 21, credits: 10, type: '職業類科' , ownership: 'public'},
-                '龍潭高中(園藝科)': { points: 21, credits: 10, type: '職業類科' , ownership: 'public'},
-                '龍潭高中(機械科)': { points: 21, credits: 11, type: '職業類科', ownership: 'public' },
-                '龍潭高中(電子科)': { points: 23, credits: 13, type: '職業類科' , ownership: 'public'},
-                '龍潭高中(畜產保健科)': { points: 21, credits: 14, type: '職業類科' , ownership: 'public'},
-                '關西高中(園藝科)': { points: 21, credits: 9, type: '職業類科' , ownership: 'public'},
-                '關西高中(畜產保健科)': { points: 19, credits: 8, type: '職業類科' , ownership: 'public'},
-                '關西高中(家政科)': { points: 21, credits: 10, type: '職業類科' , ownership: 'public'},
-                '振聲高中(普通科)': { points: 23, credits: 13, type: '普通科', ownership: 'private' },      
-                '振聲高中(電子商務科)': { points: 21, credits: 9, type: '職業類科', ownership: 'private' },
-                '振聲高中(多媒體設計)': { points: 21, credits: 9, type: '職業類科', ownership: 'private' },
-                '振聲高中(觀光事業科)': { points: 21, credits: 12, type: '職業類科', ownership: 'private' },
-                '振聲高中(資訊科)': { points: 23, credits: 11, type: '職業類科', ownership: 'private' },
-                '振聲高中(應用英語科)': { points: 23, credits: 13, type: '職業類科', ownership: 'private' },
-                '振聲高中(商業經營科)': { points: 23, credits: 10, type: '職業類科', ownership: 'private' },
-                '復旦高中(普通科)': { points: 29, credits: 28, type: '普通科', ownership: 'private' },      
-                '新興高中(普通科)': { points: 23, credits: 10, type: '普通科', ownership: 'private' },      
-                '新興高中(應用日語科)': { points: 29, credits: 13, type: '職業類科', ownership: 'private' },      
-                '新興高中(廣告設計科)': { points: 19, credits: 9, type: '職業類科', ownership: 'private' },      
-                '新興高中(資料處理科)': { points: 19, credits: 9, type: '職業類科', ownership: 'private' },      
-                '新興高中(應用英語科)': { points: 19, credits: 9, type: '職業類科', ownership: 'private' },      
-                '新興高中(電子科)': { points: 19, credits: 9, type: '職業類科', ownership: 'private' },      
-                '新興高中(機械科)': { points: 19, credits: 9, type: '職業類科', ownership: 'private' },      
-                '新興高中(汽車科)': { points: 17, credits: 9, type: '職業類科', ownership: 'private' },      
-                '新興高中(飛機修護科)': { points: 19, credits: 8, type: '職業類科', ownership: 'private' },      
-                '新興高中(觀光事業科)': { points: 19, credits: 8, type: '職業類科', ownership: 'private' },      
-                '新興高中(電子商務科)': { points: 19, credits: 8, type: '職業類科', ownership: 'private' },      
-                '新興高中(家具木工科)': { points: 19, credits: 8, type: '職業類科', ownership: 'private' },      
-                '治平高中(普通科)': { points: 15, credits: 6, type: '普通科', ownership: 'private' },      
-                '治平高中(綜合科)': { points: 15, credits: 6, type: '普通科', ownership: 'private' },      
-
-
-};
-              const compositionPoints = {
-            0: 0,
-            1: 1,
-            2: 2,
-            3: 2,
-            4: 3,
-            5: 3,
-            6: 3
-        };
-
-        const scorePoints = {
-            'A++': 6,
-            'A+': 6,
-            'A': 6,
-            'B++': 4,
-            'B+': 4,
-            'B': 4,
-            'C': 2
-        };
-
-        const creditPoints = {
-            'A++': 7,
-            'A+': 6,
-            'A': 5,
-            'B++': 4,
-            'B+': 3,
-            'B': 2,
-            'C': 1
-        };
-
-        const vocationalMajors = [
-            '商業經營科', '資料處理科', '國際貿易科', '應用英語科', '廣告設計科',
-            '電機科', '電子科', '畜產保健', '機械科', '化工科',
-            '動力機械', '汽車科', '生物產業機電', '模具科', '農場經營科',
-            '園藝科', '造園科', '家政科', '資訊科','家具木工科','電子商務科','觀光事業科','飛機修護科'
-        ];
-            
-    function openInstructions() {
-    // 獲取彈出視窗元素
-    var modal = document.getElementById("instructionModal");
-    // 打開彈出視窗
-    modal.style.display = "block";
-}
-
-
-
-            function closeModal() {
-    var modal = document.getElementById("instructionModal");
-    modal.style.display = "none";
-}
-
- window.onclick = function(event) {
-        var modal = document.getElementById("myModal");
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-        function updateMajorOptions() {
-            const schoolType = document.getElementById('schoolType').value;
-            const majorSelect = document.getElementById('major');
-            const majorLabel = document.getElementById('majorLabel');
-
-            if (schoolType === '職業類科') {
-                majorSelect.style.display = 'block';
-                majorLabel.style.display = 'block';
-                majorSelect.innerHTML = '';
-                vocationalMajors.forEach(major => {
-                    const option = document.createElement('option');
-                    option.value = major;
-                    option.textContent = major;
-                    majorSelect.appendChild(option);
-                });
-            } else {
-                majorSelect.style.display = 'none';
-                majorLabel.style.display = 'none';
-                majorSelect.innerHTML = '';
-            }
-        }
-
-        function analyzeScores() {
-    const storedInviteCode = localStorage.getItem('generatedInviteCode');
-    const storedTimestamp = localStorage.getItem('inviteCodeTimestamp');
-    const enteredInviteCode = document.getElementById('invitationCode').value;
-
-    if (!storedInviteCode || !storedTimestamp) {
-        alert('請先生成有效的邀請碼。');
-        return;
-    }
-
-    const now = new Date().getTime();
-    const oneHourInMillis = 60 * 60 * 1000; // 1 hour in milliseconds
-
-    if (now - parseInt(storedTimestamp) >= oneHourInMillis) {
-        alert('邀請碼已過期，請重新生成。');
-        return;
-    }
-
-    if (storedInviteCode !== enteredInviteCode) {
-        alert('邀請碼錯誤，無法進行分析。');
-        return;
-    }
-
-    const schoolType = document.getElementById('schoolType').value;
-    const schoolOwnership = document.getElementById('schoolOwnership').value;
-    const major = document.getElementById('major').value;
-    const chinese = document.getElementById('chinese').value;
-    const english = document.getElementById('english').value;
-    const math = document.getElementById('math').value;
-    const science = document.getElementById('science').value;
-    const social = document.getElementById('social').value;
-    const composition = parseInt(document.getElementById('composition').value);
-
-    const totalPoints = scorePoints[chinese] + scorePoints[english] + scorePoints[math] + scorePoints[science] + scorePoints[social] + compositionPoints[composition];
-    const totalCredits = creditPoints[chinese] + creditPoints[english] + creditPoints[math] + creditPoints[science] + creditPoints[social];
-
-    const eligibleSchools = [];
-
-    for (let school in schoolRequirements) {
-        if (
-            (schoolType === 'all' || schoolRequirements[school].type === schoolType) &&
-            (schoolOwnership === 'all' || schoolRequirements[school].ownership === schoolOwnership) &&
-            (schoolType !== '職業類科' || school.includes(major)) &&
-            totalPoints >= schoolRequirements[school].points &&
-            totalCredits >= schoolRequirements[school].credits
-        ) {
-            eligibleSchools.push(school);
-        }
-    }
-
-    document.getElementById('totalPoints').textContent = `總積分: ${totalPoints}`;
-    document.getElementById('totalCredits').textContent = `總積點: ${totalCredits}`;
-    document.getElementById('eligibleSchools').textContent = `有機會錄取的學校: ${eligibleSchools.join(', ')}`;
-    var message = `
-                您輸入的資料：
-                學校屬性: ${schoolOwnership}
-                學校類型: ${schoolType}
-                科系: ${major}
-                國文成績: ${chinese}
-                數學成績: ${math}
-                英文成績: ${english}
-                自然成績: ${science}
-                社會成績: ${social}
-                作文成績: ${composition}級分
-
-
-            `;
-            alert(message);
-        
-}
-</script>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VKP55N96DC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VKP55N96DC');
-</script>
-
+    
+    <div id="studyTimerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>學習計時器</h2>
+            <div id="studyTimerDisplay">00:00:00</div>
+            <div class="timer-controls">
+                <button id="startStudyTimer">開始</button>
+                <button id="pauseStudyTimer">暫停</button>
+                <button id="resetStudyTimer">重置</button>
+            </div>
+            <div class="study-log">
+                <h3>今日學習紀錄</h3>
+                <ul id="studyLogList"></ul>
+            </div>
+        </div>
     </div>
+
+    <div id="examTipsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>考試小撇步</h2>
+            <div class="exam-tips-container">
+                <div class="tip">
+                    <i class="fas fa-clock"></i>
+                    <h3>時間管理</h3>
+                    <p>合理分配每個題目的作答時間，不要在單一題目上花太多時間。</p>
+                </div>
+                <div class="tip">
+                    <i class="fas fa-brain"></i>
+                    <h3>心理調適</h3>
+                    <p>保持冷靜，深呼吸，相信自己的準備已經足夠。</p>
+                </div>
+                <div class="tip">
+                    <i class="fas fa-book-open"></i>
+                    <h3>答題技巧</h3>
+                    <p>由易到難，先做有把握的題目，再挑戰較難的題目。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="social-share">
+        <a href="#" id="shareLineBtn" class="share-btn line"><i class="fab fa-line"></i></a>
+        <a href="#" id="shareFacebookBtn" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
 </body>
 </html>
